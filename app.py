@@ -54,7 +54,7 @@ if uploaded_file is not None:
             if ELEVENLABS_API_KEY == "YAHAN_APNI_API_KEY_PASTE_KAREIN" or not ELEVENLABS_API_KEY:
                 st.error("⚠️ Please pehle code me apni ElevenLabs API Key daalein!")
                 st.stop()
-                
+                url = f"https://elevenlabs.io{voice_id}"
             with st.spinner("⏳ ElevenLabs AI Voiceover taiyar kar raha hai..."):
                 try:
                     # 🎯 EXACT CORRECT URL BELOW
