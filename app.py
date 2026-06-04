@@ -39,7 +39,8 @@ if uploaded_file is not None:
         pdf_reader = pypdf.PdfReader(uploaded_file)
         for page in pdf_reader.pages:
             text = page.extract_text()
-            if text: text += text + "\n"
+            if text: full_text += text + "\n"
+
     except Exception as e:
         st.error(f"⚠️ PDF Error: {e}")
         st.stop()
