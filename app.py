@@ -1,22 +1,34 @@
 import streamlit as st
 import pypdf
-from kokoro import KPipeline
-import soundfile as sf
-import numpy as np
+from gtts import gTTS
 import io
 
 # Page Configuration
-st.set_page_config(page_title="Ultra-Realistic Free AI Narrator", page_icon="🎙️", layout="centered")
+st.set_page_config(page_title="Fast AI Voiceover Narrator", page_icon="🎙️", layout="centered")
 
 st.markdown("""
     <style>
-    .main-title { font-size: 2.2rem; font-weight: bold; text-align: center; color: #9B59B6; }
+    .main-title { font-size: 2.2rem; font-weight: bold; text-align: center; color: #1ABC9C; }
     .sub-title { font-size: 1.1rem; text-align: center; margin-bottom: 2rem; color: #555555; }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<p class="main-title">🎙️ Kokoro Ultra-Realistic Free Narrator</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-title">Bina kisi limit aur bina kisi API Key ke premium human-like voiceover generator.</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-title">🎙️ Upgraded Anti-Lag AI Voiceover</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title">Badi se badi PDF ke liye lag-free, free aur unlimited audio generator.</p>', unsafe_allow_html=True)
+
+# Function to split text into safe paragraphs (Crash se bachne ke liye)
+def get_text_chunks(text, max_chars=2000):
+    paragraphs = text.split("\n")
+    chunks = []
+    current_chunk = ""
+    for para in paragraphs:
+        if len(current_chunk) + len(para) < max_chars:
+            current_chunk += para + "\n"
+        else:
+            if current_chunk: chunks.append(current_chunk)
+            current_chunk = para + "\n"
+    if current_chunk: chunks.append(current_chunk)
+    return chunks
 
 # File Uploader
 uploaded_file = st.file_uploader("Apni PDF File Upload Karein", type=["pdf"])
@@ -39,53 +51,46 @@ if uploaded_file is not None:
         with st.expander("📄 Text Preview"):
             st.text_area("PDF Content:", value=full_text, height=120, disabled=True)
             
-        # Best available real voices in Kokoro (American & British English)
-        # Note: Kokoro is best optimized for English content right now.
-        voice_options = {
-            "Adam (Deep & Executive Male Voice)": "am_adam",
-            "Michael (Professional Storyteller Male)": "am_michael",
-            "George (Warm British Podcaster Male)": "bm_george",
-            "Bella (Soft & Clear Female Voice)": "af_bella"
-        }
-        selected_voice_label = st.selectbox("🎚️ Premium Free Voice Chunyein:", list(voice_options.keys()))
-        voice_id = voice_options[selected_voice_label]
+        lang_options = {"English (Clear US Accent)": "en", "Hindi (हिंदी साफ़ आवाज़)": "hi"}
+        selected_lang = st.selectbox("🎙️ Voiceover ki Bhasha Chunyein:", list(lang_options.keys()))
+        lang_code = lang_options[selected_lang]
 
-        if st.button("Cinematic Voiceover Taiyar Karein 🚀", use_container_width=True):
-            with st.spinner("⏳ Kokoro AI high-quality audio pack load kar raha hai... isme pehli baar thoda waqt lag sakta hai..."):
-                try:
-                    # Initialize the pipeline (language code 'a' for American English)
-                    # For British voices like George, it adapts internally
-                    pipeline = KPipeline(lang_code='a')
+        if st.button("Voiceover Taiyar Karein 🚀", use_container_width=True):
+            # Text ko safe chunks mein todna
+            text_chunks = get_text_chunks(full_text)
+            
+            progress_bar = st.progress(0.0)
+            status_text = st.empty()
+            status_text.text("⏳ Audio chunks generate ho rahe hain... Please wait...")
+            
+            try:
+                final_audio = io.BytesIO()
+                total_chunks = len(text_chunks)
+                
+                # Ek-ek chunk ka audio banakar smoothly jodna
+                for idx, chunk in enumerate(text_chunks):
+                    if not chunk.strip(): continue
                     
-                    # Generate audio chunks using generator
-                    generator = pipeline(full_text, voice=voice_id, speed=1, split_pattern=r'\n|(?<=[.!?])\s+')
+                    tts = gTTS(text=chunk, lang=lang_code, slow=False)
+                    chunk_fp = io.BytesIO()
+                    tts.write_to_fp(chunk_fp)
                     
-                    audio_chunks = []
-                    for gs, ps, audio in generator:
-                        if audio is not None:
-                            audio_chunks.append(audio)
-                    
-                    if audio_chunks:
-                        # Combine all audio pieces smoothly
-                        full_audio = np.concatenate(audio_chunks)
-                        
-                        # Convert numpy array to temporary mp3 byte array for player
-                        buffer = io.BytesIO()
-                        sf.write(buffer, full_audio, 24000, format='WAV', subtype='PCM_16')
-                        buffer.seek(0)
-                        
-                        st.success("🎉 Studio-Quality Free Voiceover Taiyar Hai!")
-                        st.audio(buffer, format="audio/wav")
-                        
-                        st.download_button(
-                            label="High-Quality Audio Download Karein 📥",
-                            data=buffer,
-                            file_name="kokoro_narration.wav",
-                            mime="audio/wav",
-                            use_container_width=True
-                        )
-                    else:
-                        st.error("❌ Audio generate nahi ho paya.")
-                except Exception as e:
-                    st.error(f"❌ Error: {e}")
-                    st.info("💡 Tip: Kokoro model files download karne me thoda waqt leta hai, internet check karein.")
+                    final_audio.write(chunk_fp.getvalue())
+                    progress_bar.progress((idx + 1) / total_chunks)
+                
+                final_audio.seek(0)
+                status_text.empty()
+                
+                st.success("🎉 Voiceover kamyabi se taiyar ho gaya hai!")
+                st.audio(final_audio, format="audio/mp3")
+                
+                st.download_button(
+                    label="Audio Download Karein 📥",
+                    data=final_audio,
+                    file_name="unlimited_narration.mp3",
+                    mime="audio/mp3",
+                    use_container_width=True
+                )
+            except Exception as e:
+                status_text.empty()
+                st.error(f"❌ Error: {e}")
