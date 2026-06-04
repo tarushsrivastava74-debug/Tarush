@@ -18,7 +18,7 @@ st.markdown('<p class="sub-title">Human-like emotional voiceover jisme real insa
 
 # 🔑 APNI API KEY YAHAN PASTE KAREIN
 # Note: Is inverted comma "" ke andar apni ElevenLabs se copy ki hui key dalein
-ELEVENLABS_API_KEY = "YAHAN_APNI_API_KEY_PASTE_KAREIN"
+ELEVENLABS_API_KEY = "387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6"
 
 # File Uploader
 uploaded_file = st.file_uploader("Apni PDF File Upload Karein", type=["pdf"])
