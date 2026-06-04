@@ -1,4 +1,3 @@
-# FRESH VERSION 2.0 - CACHE BREAKER
 import streamlit as st
 import pypdf
 import requests
@@ -18,7 +17,6 @@ st.markdown('<p class="main-title">🎙️ ElevenLabs Ultra-Realistic Narrator</
 st.markdown('<p class="sub-title">Human-like emotional voiceover jisme real insaan jaisa expression milega.</p>', unsafe_allow_html=True)
 
 # 🔑 APNI API KEY YAHAN PASTE KAREIN
-# Note: Is inverted comma "" ke andar apni ElevenLabs se copy ki hui key dalein
 ELEVENLABS_API_KEY = "387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6"
 
 # File Uploader
@@ -52,13 +50,12 @@ if uploaded_file is not None:
         voice_id = voice_options[selected_voice_label]
 
         if st.button("Premium Voiceover Taiyar Karein 🚀", use_container_width=True):
-            if ELEVENLABS_API_KEY == "387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6" or not ELEVENLABS_API_KEY:v
-                st.error("387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6")
+            if ELEVENLABS_API_KEY == "YAHAN_APNI_API_KEY_PASTE_KAREIN" or not ELEVENLABS_API_KEY:
+                st.error("⚠️ Please pehle code me apni ElevenLabs API Key daalein!")
                 st.stop()
                 
             with st.spinner("⏳ ElevenLabs AI Voiceover taiyar kar raha hai..."):
                 try:
-                    # 🎯 CORRECT URL FOR ELEVENLABS API
                     url = f"https://elevenlabs.io{voice_id}"
                     
                     headers = {
@@ -67,7 +64,7 @@ if uploaded_file is not None:
                         "xi-api-key": ELEVENLABS_API_KEY
                     }
                     data = {
-                        "text": full_text[:3500],  # Free tier safe character limit
+                        "text": full_text[:3500],
                         "model_id": "eleven_multilingual_v2", 
                         "voice_settings": {
                             "stability": 0.45,        
@@ -94,4 +91,3 @@ if uploaded_file is not None:
                         st.error(f"❌ ElevenLabs Error: {response.text}")
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
-
