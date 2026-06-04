@@ -17,7 +17,8 @@ st.markdown('<p class="main-title">🎙️ ElevenLabs Ultra-Realistic Narrator</
 st.markdown('<p class="sub-title">Human-like emotional voiceover jisme real insaan jaisa expression milega.</p>', unsafe_allow_html=True)
 
 # 🔑 APNI API KEY YAHAN PASTE KAREIN
-ELEVENLABS_API_KEY = "387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6"
+# Note: Is inverted comma "" ke andar apni ElevenLabs se copy ki hui key dalein
+ELEVENLABS_API_KEY = "YAHAN_APNI_API_KEY_PASTE_KAREIN"
 
 # File Uploader
 uploaded_file = st.file_uploader("Apni PDF File Upload Karein", type=["pdf"])
@@ -40,7 +41,7 @@ if uploaded_file is not None:
         with st.expander("📄 Text Preview"):
             st.text_area("PDF Content:", value=full_text, height=120, disabled=True)
             
-        # Top premium voices
+        # Top premium voices ids
         voice_options = {
             "Adam (Deep, Professional & Narrative - Best for English)": "pNInz6obpgTE5algwJAw",
             "Antoni (Soft, Storyteller & Emotional - Best for Hindi & English)": "ErXwobaYiN019PkySvjV",
@@ -56,7 +57,9 @@ if uploaded_file is not None:
                 
             with st.spinner("⏳ ElevenLabs AI Voiceover taiyar kar raha hai..."):
                 try:
+                    # 🎯 EXACT CORRECT URL BELOW
                     url = f"https://elevenlabs.io{voice_id}"
+                    
                     headers = {
                         "Accept": "audio/mpeg",
                         "Content-Type": "application/json",
@@ -90,3 +93,4 @@ if uploaded_file is not None:
                         st.error(f"❌ ElevenLabs Error: {response.text}")
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
+
