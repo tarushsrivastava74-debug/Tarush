@@ -1,6 +1,5 @@
 streamlit
 pypdf
-kokoro
-soundfile
-numpy
+gTTS
+
 
