@@ -1,4 +1,6 @@
 streamlit
 pypdf
-requests
+kokoro
+soundfile
+numpy
 
