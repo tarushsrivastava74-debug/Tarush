@@ -14,7 +14,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<p class="main-title">🎙️ Upgraded Anti-Lag AI Voiceover</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub-title">Badi se badi PDF ke liye lag-free, free aur unlimited audio generator.</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title">Badi se badi PDF ke liye lag-free, free aur unlimited male voice narrator.</p>', unsafe_allow_html=True)
 
 # Function to split text into safe paragraphs (Crash se bachne ke liye)
 def get_text_chunks(text, max_chars=2000):
@@ -39,8 +39,7 @@ if uploaded_file is not None:
         pdf_reader = pypdf.PdfReader(uploaded_file)
         for page in pdf_reader.pages:
             text = page.extract_text()
-            if text:
-                full_text += text + "\n"
+            if text: text += text + "\n"
     except Exception as e:
         st.error(f"⚠️ PDF Error: {e}")
         st.stop()
@@ -51,12 +50,17 @@ if uploaded_file is not None:
         with st.expander("📄 Text Preview"):
             st.text_area("PDF Content:", value=full_text, height=120, disabled=True)
             
-        lang_options = {"English (Clear US Accent)": "en", "Hindi (हिंदी साफ़ आवाज़)": "hi"}
-        selected_lang = st.selectbox("🎙️ Voiceover ki Bhasha Chunyein:", list(lang_options.keys()))
-        lang_code = lang_options[selected_lang]
+        # 🎚️ Language hack for deep male-like tone
+        voice_options = {
+            "Professional Male Voice (English - UK Deep Tone) 🇬🇧": "co.uk",
+            "Indian Narrator Male Voice (English - India) 🇮🇳": "co.in",
+            "Standard Clear Voice (English - US) 🇺🇸": "com",
+            "Hindi Clear Voice (हिंदी साफ़ आवाज़) 🇮🇳": "hi"
+        }
+        selected_voice_label = st.selectbox("🎙️ Narration Voice aur Tone Chunyein:", list(voice_options.keys()))
+        tld_or_lang = voice_options[selected_voice_label]
 
         if st.button("Voiceover Taiyar Karein 🚀", use_container_width=True):
-            # Text ko safe chunks mein todna
             text_chunks = get_text_chunks(full_text)
             
             progress_bar = st.progress(0.0)
@@ -67,11 +71,15 @@ if uploaded_file is not None:
                 final_audio = io.BytesIO()
                 total_chunks = len(text_chunks)
                 
-                # Ek-ek chunk ka audio banakar smoothly jodna
                 for idx, chunk in enumerate(text_chunks):
                     if not chunk.strip(): continue
                     
-                    tts = gTTS(text=chunk, lang=lang_code, slow=False)
+                    # Agar hindi select kiya hai toh normal chalega, baaki options me TLD hack kaam karega deep tone ke liye
+                    if tld_or_lang == "hi":
+                        tts = gTTS(text=chunk, lang="hi", slow=False)
+                    else:
+                        tts = gTTS(text=chunk, lang="en", tld=tld_or_lang, slow=False)
+                        
                     chunk_fp = io.BytesIO()
                     tts.write_to_fp(chunk_fp)
                     
@@ -81,16 +89,17 @@ if uploaded_file is not None:
                 final_audio.seek(0)
                 status_text.empty()
                 
-                st.success("🎉 Voiceover kamyabi se taiyar ho gaya hai!")
+                st.success("🎉 Voiceover bina kisi limit ke taiyar ho gaya hai!")
                 st.audio(final_audio, format="audio/mp3")
                 
                 st.download_button(
                     label="Audio Download Karein 📥",
                     data=final_audio,
-                    file_name="unlimited_narration.mp3",
+                    file_name="unlimited_male_narration.mp3",
                     mime="audio/mp3",
                     use_container_width=True
                 )
             except Exception as e:
                 status_text.empty()
                 st.error(f"❌ Error: {e}")
+
