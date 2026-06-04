@@ -52,7 +52,7 @@ if uploaded_file is not None:
         voice_id = voice_options[selected_voice_label]
 
         if st.button("Premium Voiceover Taiyar Karein 🚀", use_container_width=True):
-            if ELEVENLABS_API_KEY == "YAHAN_APNI_API_KEY_PASTE_KAREIN" or not ELEVENLABS_API_KEY:
+            if ELEVENLABS_API_KEY == "387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6" or not ELEVENLABS_API_KEY:v
                 st.error("⚠️ Please pehle code me apni ElevenLabs API Key daalein!")
                 st.stop()
                 
