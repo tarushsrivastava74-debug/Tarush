@@ -53,7 +53,7 @@ if uploaded_file is not None:
 
         if st.button("Premium Voiceover Taiyar Karein 🚀", use_container_width=True):
             if ELEVENLABS_API_KEY == "387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6" or not ELEVENLABS_API_KEY:v
-                st.error("⚠️ Please pehle code me apni ElevenLabs API Key daalein!")
+                st.error("387cddb77eaad5f10010b89ed27637cfe599ca8505384122fbb486231c3519d6")
                 st.stop()
                 
             with st.spinner("⏳ ElevenLabs AI Voiceover taiyar kar raha hai..."):
